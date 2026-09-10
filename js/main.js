@@ -22,11 +22,6 @@ curriculumList.innerHTML = `
   </div>
   ${curriculum.map(item => `<div class="curriculum-item reveal"><div class="curriculum-code">${item.code}</div><div><h3>${item.title}</h3><p>${item.desc}</p></div><div class="curriculum-credit">${item.credit}</div></div>`).join("")}`;
 
-const curriculumTitle = document.querySelector("#curriculum .section-title");
-const curriculumSubtitle = document.querySelector("#curriculum .section-subtitle");
-if (curriculumTitle) curriculumTitle.textContent = "교육과정";
-if (curriculumSubtitle) curriculumSubtitle.textContent = "3년 동안 인간의 모순을 관찰하고 분석하는 공통교육과 전공교육을 이수합니다.";
-
 document.querySelectorAll(".department-header").forEach(button => button.addEventListener("click", () => {
   const department = button.closest(".department");
   const isOpen = department.classList.contains("open");
@@ -40,77 +35,137 @@ document.querySelectorAll(".department-header").forEach(button => button.addEven
   }
 }));
 
-const testSection = document.createElement("section");
-testSection.className = "section section-dark";
-testSection.id = "test";
-testSection.innerHTML = `<div class="container"><div class="section-header reveal"><div class="section-eyebrow">JORONG INDEX</div><h2 class="section-title">당신의 조롱력을<br>측정해보세요.</h2><p class="section-subtitle">본인이 얼마나 타인의 모순을 빠르게 발견하는지 확인합니다. 물론 본인의 모순은 평가 대상에서 제외됩니다.</p></div><div class="test-card reveal"><div class="test-progress"><span id="testProgress">1 / 5</span><div><i id="testBar"></i></div></div><div id="testArea"></div></div></div>`;
-const admissionSection = document.getElementById("admission");
-if (admissionSection) admissionSection.parentNode.insertBefore(testSection, admissionSection);
-
-const footerBottom = document.querySelector(".footer-bottom");
-if (footerBottom) footerBottom.innerHTML = `<div>싸이버 조롱대학교 · 입학처 02-0000-0000 · admission@jorong.ac.kr</div><div>서울특별시 어딘가 · 평일 09:00–17:00</div><div class="footer-notice">본 사이트는 실제 교육기관이 아닌 패러디 웹사이트입니다. 합격 여부 및 등록금 납부와 관련한 실제 효력은 없습니다.</div><div>© 2026 CYBER JORONG UNIVERSITY. All Rights Reserved.</div>`;
-const footerLinks = document.querySelector(".footer-links");
-if (footerLinks && !footerLinks.querySelector('a[href="#test"]')) footerLinks.insertAdjacentHTML("beforeend", '<a href="#test">조롱력 테스트</a>');
-const nav = document.querySelector(".nav");
-if (nav && !nav.querySelector('a[href="#test"]')) nav.insertAdjacentHTML("beforeend", '<a href="#test">조롱력 테스트</a>');
+/* =========================
+   DEPARTMENT MATCHING TEST
+   ========================= */
+const departmentProfiles = {
+  "이중잣대학과": {
+    image: "./assets/characters/double-standard.svg",
+    title: "이중잣대학과",
+    desc: "상황과 사람에 따라 기준을 조금씩 조정할 줄 아는 편입니다. 남에게는 원칙이 중요하지만 본인에게는 충분히 설명할 만한 사정이 있다고 생각합니다.",
+    fit: "기준을 상황에 맞게 해석하는 능력이 뛰어난 학생에게 적합합니다."
+  },
+  "확신사회학과": {
+    image: "./assets/characters/confidence-sociology.svg",
+    title: "확신사회학과",
+    desc: "정보가 충분하지 않아도 일단 자신의 판단을 믿는 편입니다. 검색보다 자신감이 먼저 도착하는 순간이 종종 있습니다.",
+    fit: "모르는 주제에도 의견을 제시할 수 있는 자신감이 있다면 잘 맞습니다."
+  },
+  "선택적정의학과": {
+    image: "./assets/characters/selective-justice.svg",
+    title: "선택적정의학과",
+    desc: "원칙을 중요하게 생각하지만 현실적인 상황에서는 예외도 필요하다고 봅니다. 특히 그 예외가 본인에게 필요한 경우에는 더욱 그렇습니다.",
+    fit: "원칙과 현실 사이에서 합리적인 출구를 찾는 데 능합니다."
+  },
+  "타인인생컨설팅학과": {
+    image: "./assets/characters/life-consulting.svg",
+    title: "타인인생컨설팅학과",
+    desc: "타인의 문제에는 놀라울 정도로 명확한 해답을 알고 있습니다. 자신의 문제에 대해서는 조금 더 신중한 검토가 필요하다고 생각합니다.",
+    fit: "타인의 연애와 직장생활에 조언할 때 유난히 논리적인 학생에게 추천합니다."
+  },
+  "은근한자랑학과": {
+    image: "./assets/characters/humble-brag.svg",
+    title: "은근한자랑학과",
+    desc: "자랑은 하지 않지만 사람들이 알아주면 좋겠다고 생각합니다. 우연히 공개한 것처럼 보이지만 사실 공개할 이유는 충분히 알고 있습니다.",
+    fit: "겸손과 자기PR 사이의 미묘한 균형을 이해하는 학생에게 적합합니다."
+  }
+};
 
 const testQuestions = [
-  { q: "친구가 약속 시간에 20분 늦었다. 가장 먼저 드는 생각은?", a: ["시간은 지켜야지.", "무슨 사정이 있었겠지.", "나는 늦어도 괜찮지만 친구가 늦으면 조금 그렇다.", "일단 다음 약속도 늦는지 지켜본다."] },
-  { q: "SNS에 지인이 좋은 소식을 올렸다. 당신의 반응은?", a: ["진심으로 축하한다.", "좋아요를 누르고 내용은 자세히 보지 않는다.", "나도 비슷한 경험이 있다는 사실을 굳이 말하고 싶어진다.", "일단 댓글을 보고 분위기를 파악한다."] },
-  { q: "회의에서 누군가 확신에 차서 틀린 말을 한다면?", a: ["근거를 확인해보자고 한다.", "틀렸다는 생각이 들지만 분위기를 본다.", "내가 아는 내용이라면 바로 정정한다.", "확신이 있으니 뭔가 이유가 있겠지 생각한다."] },
-  { q: "본인이 한 실수와 남이 한 실수의 차이를 설명한다면?", a: ["원칙적으로 같아야 한다.", "상황에 따라 다를 수 있다.", "내 실수에는 사정이 있고 남의 실수에는 관리가 부족하다.", "판단하기 전에 전체 맥락을 봐야 한다."] },
-  { q: "누군가 당신의 단점을 정확하게 지적했다면?", a: ["인정하고 고친다.", "일단 반박할 근거를 찾는다.", "맞는 말이지만 그 사람이 말할 자격이 있는지는 따져본다.", "집에 가서 생각해본다."] }
+  { q: "친구가 약속 시간에 20분 늦었습니다. 가장 가까운 생각은?", answers: [
+    ["20분이면 충분히 기다릴 만하지.", "타인인생컨설팅학과"], ["시간 약속은 지켜야지.", "선택적정의학과"], ["나는 늦어도 친구가 늦으면 좀 그렇다.", "이중잣대학과"], ["일단 왜 늦었는지 들어본다.", "확신사회학과"]
+  ]},
+  { q: "SNS에 지인이 좋은 소식을 올렸습니다. 당신이라면?", answers: [
+    ["진심으로 축하하고 지나간다.", "선택적정의학과"], ["나도 비슷한 경험이 있었다고 살짝 말한다.", "은근한자랑학과"], ["댓글 반응부터 보고 분위기를 파악한다.", "타인인생컨설팅학과"], ["좋은 소식이면 일단 축하하지.", "확신사회학과"]
+  ]},
+  { q: "회의에서 누군가 확신에 차서 틀린 말을 합니다.", answers: [
+    ["확신하는 데는 이유가 있겠지.", "확신사회학과"], ["근거를 한번 확인해보자고 한다.", "선택적정의학과"], ["내가 아는 내용이면 바로 정정한다.", "타인인생컨설팅학과"], ["굳이 틀렸다고 바로 말할 필요는 없지.", "이중잣대학과"]
+  ]},
+  { q: "본인의 실수와 다른 사람의 실수를 비교한다면?", answers: [
+    ["원칙적으로는 같게 봐야 한다.", "선택적정의학과"], ["내 실수에는 사정이 있고 남의 실수에는 관리가 부족하다.", "이중잣대학과"], ["상황을 봐야 알지.", "타인인생컨설팅학과"], ["누가 잘못했는지는 명확하지.", "확신사회학과"]
+  ]},
+  { q: "누군가 당신의 단점을 정확하게 지적했습니다.", answers: [
+    ["맞는 말이면 인정한다.", "선택적정의학과"], ["그 사람이 말할 자격이 있는지는 별개다.", "이중잣대학과"], ["왜 그런 생각을 했는지 분석해본다.", "타인인생컨설팅학과"], ["일단 내가 얼마나 잘못했는지부터 판단한다.", "확신사회학과"]
+  ]},
+  { q: "친구가 연애 문제로 고민을 털어놓았습니다.", answers: [
+    ["그건 상대방이 잘못한 거야.", "타인인생컨설팅학과"], ["둘 다 입장이 있을 텐데.", "선택적정의학과"], ["내가 그 상황이면 이렇게 했을 텐데.", "확신사회학과"], ["내 연애는 좀 다르긴 하지만 비슷한 경험이 있었어.", "은근한자랑학과"]
+  ]},
+  { q: "최근에 꽤 비싼 물건을 샀습니다. SNS에는?", answers: [
+    ["굳이 올릴 필요는 없다.", "선택적정의학과"], ["별거 아닌데 한번 올려본다.", "은근한자랑학과"], ["좋은 거 샀으니 좋은 거라고 말한다.", "확신사회학과"], ["누가 알아보면 그때 이야기한다.", "타인인생컨설팅학과"]
+  ]},
+  { q: "평소 지키던 원칙이 이번에는 본인에게 불리합니다.", answers: [
+    ["원칙은 원칙이니까 지켜야 한다.", "선택적정의학과"], ["이번 상황은 조금 다르지 않나?", "이중잣대학과"], ["예외가 가능한 근거를 찾아본다.", "확신사회학과"], ["남이 같은 상황이면 뭐라고 할지 생각한다.", "타인인생컨설팅학과"]
+  ]},
+  { q: "친구가 당신에게 '요즘 잘되는 것 같다'고 말했습니다.", answers: [
+    ["운이 좀 좋았지.", "은근한자랑학과"], ["뭐, 내가 원래 좀 준비를 했지.", "확신사회학과"], ["그렇게 보였나?", "이중잣대학과"], ["너도 충분히 할 수 있어.", "타인인생컨설팅학과"]
+  ]},
+  { q: "누군가 온라인에서 자신 있게 잘못된 정보를 말합니다.", answers: [
+    ["검색해보면 금방 알 수 있는데.", "확신사회학과"], ["굳이 공개적으로 망신줄 필요는 없지.", "선택적정의학과"], ["틀린 건 틀렸다고 알려줘야지.", "타인인생컨설팅학과"], ["나도 모르는 척하고 지나간다.", "은근한자랑학과"]
+  ]}
 ];
-let testStep = 0;
-let testScore = 0;
 
-function renderTest() {
-  const area = document.getElementById("testArea");
-  if (!area) return;
+const testModal = document.createElement("div");
+testModal.className = "department-test-modal";
+testModal.setAttribute("aria-hidden", "true");
+testModal.innerHTML = `<div class="test-backdrop"></div><div class="test-dialog" role="dialog" aria-modal="true" aria-labelledby="testDialogTitle"><button class="test-close" id="closeDepartmentTest" aria-label="테스트 닫기">×</button><div class="test-dialog-inner" id="testDialogInner"></div></div>`;
+document.body.appendChild(testModal);
+
+let testStep = 0;
+let testAnswers = [];
+
+function openDepartmentTest() {
+  testModal.classList.add("open");
+  testModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  testStep = 0;
+  testAnswers = [];
+  renderTestIntro();
+}
+
+function closeDepartmentTest() {
+  testModal.classList.remove("open");
+  testModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+}
+
+function renderTestIntro() {
+  document.getElementById("testDialogInner").innerHTML = `<div class="test-intro"><div class="test-eyebrow">DEPARTMENT MATCHING</div><h2 id="testDialogTitle">나에게 맞는 학과 찾기</h2><p>10개의 질문을 통해 당신의 성향과 가장 잘 어울리는 학과를 찾아드립니다.</p><div class="test-intro-note"><span>01</span><span>정답은 없습니다.</span><span>02</span><span>당신의 선택만 확인합니다.</span><span>03</span><span>마지막에 하나의 학과가 배정됩니다.</span></div><button class="test-start" id="startDepartmentTest">테스트 시작하기 <span>→</span></button></div>`;
+  document.getElementById("startDepartmentTest").addEventListener("click", renderQuestion);
+}
+
+function renderQuestion() {
   const question = testQuestions[testStep];
-  document.getElementById("testProgress").textContent = `${testStep + 1} / ${testQuestions.length}`;
-  document.getElementById("testBar").style.width = `${(testStep / testQuestions.length) * 100}%`;
-  area.innerHTML = `<div class="test-question"><span>QUESTION ${String(testStep + 1).padStart(2, "0")}</span><h3>${question.q}</h3><div class="test-options">${question.a.map((answer, index) => `<button data-score="${index}">${answer}<b>›</b></button>`).join("")}</div></div>`;
-  area.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
-    testScore += Number(button.dataset.score);
+  const progress = Math.round((testStep / testQuestions.length) * 100);
+  document.getElementById("testDialogInner").innerHTML = `<div class="test-question-screen"><div class="test-progress-label"><span>DEPARTMENT MATCHING</span><strong>${testStep + 1} / ${testQuestions.length}</strong></div><div class="test-progress-track"><i style="width:${progress}%"></i></div><span class="question-number">QUESTION ${String(testStep + 1).padStart(2, "0")}</span><h2>${question.q}</h2><div class="test-options">${question.answers.map((answer, index) => `<button data-department="${answer[1]}"><span>${answer[0]}</span><b>›</b></button>`).join("")}</div></div>`;
+  document.querySelectorAll(".test-options button").forEach(button => button.addEventListener("click", () => {
+    testAnswers.push(button.dataset.department);
     testStep += 1;
-    if (testStep < testQuestions.length) renderTest();
+    if (testStep < testQuestions.length) renderQuestion();
     else renderResult();
   }));
 }
 
 function renderResult() {
-  const area = document.getElementById("testArea");
-  const score = testScore;
-  let title;
-  let desc;
-  if (score <= 5) {
-    title = "관찰자형";
-    desc = "타인을 쉽게 단정하지 않는 편입니다. 조롱력은 낮지만 사회적 적응력은 높을 가능성이 있습니다.";
-  } else if (score <= 10) {
-    title = "잠재적 조롱자";
-    desc = "평소에는 침착하지만 모순을 발견하면 마음속으로 한 번쯤 코멘트를 남기는 유형입니다.";
-  } else if (score <= 15) {
-    title = "고급 조롱자";
-    desc = "말하지 않아도 상황의 아이러니를 빠르게 포착합니다. 표정 관리가 중요한 단계입니다.";
-  } else {
-    title = "조롱 석사";
-    desc = "남의 모순을 발견하는 속도가 매우 빠릅니다. 이제 같은 기준을 자신에게 적용하는 연습이 필요합니다.";
-  }
-  document.getElementById("testProgress").textContent = "RESULT";
-  document.getElementById("testBar").style.width = "100%";
-  area.innerHTML = `<div class="test-result"><span>YOUR JORONG TYPE</span><h3>${title}</h3><p>${desc}</p><button id="restartTest">다시 테스트하기</button></div>`;
-  document.getElementById("restartTest").addEventListener("click", () => {
-    testStep = 0;
-    testScore = 0;
-    renderTest();
-  });
+  const counts = Object.fromEntries(Object.keys(departmentProfiles).map(name => [name, 0]));
+  testAnswers.forEach(name => counts[name] += 1);
+  const max = Math.max(...Object.values(counts));
+  const tied = Object.keys(counts).filter(name => counts[name] === max);
+  const assigned = tied.length === 1 ? tied[0] : testAnswers.slice().reverse().find(name => tied.includes(name));
+  const profile = departmentProfiles[assigned];
+
+  document.getElementById("testDialogInner").innerHTML = `<div class="test-result-screen"><div class="result-label">DEPARTMENT MATCHING RESULT</div><p class="result-complete">학과 배정 완료</p><h2>당신은 <strong>${profile.title}</strong>에<br>어울립니다.</h2><div class="result-character"><img src="${profile.image}" alt="${profile.title} 신입생 캐릭터 일러스트"></div><div class="result-evaluation"><span>YOUR DEPARTMENT</span><h3>${profile.title}</h3><p>${profile.desc}</p><small>${profile.fit}</small></div><div class="result-actions"><button id="restartDepartmentTest">다시 테스트하기</button><button id="goDepartment">학과 자세히 보기 <span>→</span></button></div></div>`;
+  document.getElementById("restartDepartmentTest").addEventListener("click", () => { testStep = 0; testAnswers = []; renderTestIntro(); });
+  document.getElementById("goDepartment").addEventListener("click", () => { closeDepartmentTest(); document.getElementById("departments").scrollIntoView({ behavior: "smooth" }); });
 }
 
-const testStyle = document.createElement("style");
-testStyle.textContent = `
-.common-curriculum{padding:38px 0 45px;border-bottom:1px solid #34415a}.common-heading>span{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:12px;letter-spacing:.12em}.common-heading h3{font-size:22px;margin:7px 0 5px}.common-heading p{color:#8f99aa;font-size:12px}.common-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#34415a;margin-top:28px}.common-course{background:var(--navy2);padding:24px}.common-course strong{font-size:14px}.common-course p{color:#8f99aa;font-size:11px;line-height:1.8;margin-top:8px}.test-card{max-width:900px;background:var(--navy2);border:1px solid #34415a;padding:42px}.test-progress{display:flex;align-items:center;gap:20px;margin-bottom:45px;color:#8f99aa;font-family:'Playfair Display',serif;font-size:12px}.test-progress>div{height:2px;background:#34415a;flex:1}.test-progress i{display:block;height:100%;width:0;background:var(--gold-light);transition:.35s}.test-question>span,.test-result>span{color:var(--gold-light);font-size:10px;letter-spacing:.16em}.test-question h3{font-size:25px;line-height:1.5;margin:14px 0 30px;letter-spacing:-.035em}.test-options{display:grid;gap:8px}.test-options button{display:flex;justify-content:space-between;align-items:center;text-align:left;border:1px solid #34415a;background:transparent;color:#dce0e6;padding:17px 20px;font-size:13px;cursor:pointer;transition:.2s}.test-options button:hover{background:#202f4b;border-color:#63708a;transform:translateX(4px)}.test-options b{font-size:20px;font-weight:300;color:#8f99aa}.test-result{text-align:center;padding:20px 0 10px}.test-result h3{font-size:38px;color:var(--gold-light);margin:12px 0}.test-result p{color:#aeb7c5;font-size:13px;max-width:560px;margin:0 auto 30px}.test-result button{height:46px;padding:0 24px;border:1px solid #58657c;background:transparent;color:#fff;cursor:pointer}.footer-notice{margin-top:14px;color:#4f5a6d}@media(max-width:850px){.common-grid{grid-template-columns:1fr}.test-card{padding:30px 24px}.test-question h3{font-size:20px}}`;
-document.head.appendChild(testStyle);
+document.getElementById("openDepartmentTest")?.addEventListener("click", openDepartmentTest);
+document.getElementById("openDepartmentTestBottom")?.addEventListener("click", openDepartmentTest);
+document.getElementById("closeDepartmentTest").addEventListener("click", closeDepartmentTest);
+testModal.querySelector(".test-backdrop").addEventListener("click", closeDepartmentTest);
+document.addEventListener("keydown", event => { if (event.key === "Escape" && testModal.classList.contains("open")) closeDepartmentTest(); });
+
+const footerBottom = document.querySelector(".footer-bottom");
+if (footerBottom) footerBottom.innerHTML = `<div>싸이버 조롱대학교 · 입학처 02-0000-0000 · admission@jorong.ac.kr</div><div>서울특별시 어딘가 · 평일 09:00–17:00</div><div class="footer-notice">본 사이트는 실제 교육기관이 아닌 패러디 웹사이트입니다. 합격 여부 및 등록금 납부와 관련한 실제 효력은 없습니다.</div><div>© 2026 CYBER JORONG UNIVERSITY. All Rights Reserved.</div>`;
 
 const header = document.getElementById("header");
 const progress = document.getElementById("progress");
@@ -127,7 +182,7 @@ const revealObserver = new IntersectionObserver(entries => {
       revealObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.12 });
+}, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
 document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
 
 const sections = document.querySelectorAll("section[id]");
@@ -141,5 +196,3 @@ const navObserver = new IntersectionObserver(entries => {
   });
 }, { rootMargin: "-35% 0px -55% 0px" });
 sections.forEach(section => navObserver.observe(section));
-
-renderTest();
