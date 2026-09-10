@@ -1,7 +1,8 @@
 (function () {
   function initDepartmentTestEntry() {
     const admissionSection = document.getElementById('admission');
-    if (!admissionSection || document.getElementById('test')) return;
+    const departmentsSection = document.getElementById('departments');
+    if (!admissionSection || !departmentsSection || document.getElementById('test')) return;
 
     const admissionTitle = admissionSection.querySelector('.section-title');
     const admissionSubtitle = admissionSection.querySelector('.section-subtitle');
@@ -97,7 +98,8 @@
         </div>
       </div>`;
 
-    admissionSection.parentNode.insertBefore(testSection, admissionSection);
+    /* Place the CTA directly below the five department descriptions. */
+    departmentsSection.parentNode.insertBefore(testSection, departmentsSection.nextSibling);
 
     const open = document.getElementById('openDepartmentTestEntry');
     if (open && typeof window.openDepartmentTest === 'function') {
@@ -124,8 +126,8 @@
       const button = event.target.closest('#shareDepartmentResult');
       if (!button) return;
 
-      const url = window.location.href;
-      const original = button.textContent;
+      const url = 'https://shkuhub.github.io/cyber-jorong-university/#departments';
+      const original = '공유하기';
       let copied = false;
 
       try {
