@@ -35,18 +35,12 @@
       /* Department matching CTA */
       .department-test-section { padding: 0; background: #fff; color: var(--black); }
       .department-test-section .container { width: min(1180px,calc(100% - 48px)); }
-      .department-test-section .section-header { margin: 0; padding: 55px 0 30px; }
-      .department-test-section .section-eyebrow { color: var(--gold); }
-      .department-test-section .section-title { color: var(--black); }
-      .department-test-section .section-subtitle { color: var(--gray-600); }
-      .department-test-section .test-card { width: 100%; max-width: none; min-height: 122px; padding: 34px 0; border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); background: transparent; display: grid; grid-template-columns: 80px 1fr auto; align-items: center; gap: 0; }
-      .department-test-section .test-card::before { content: 'TEST'; font-family: 'Playfair Display',serif; color: var(--gold); font-size: 10px; letter-spacing: .14em; }
-      .department-test-section .test-card-copy > span { display: none; }
-      .department-test-section .test-card-copy h3 { color: var(--black); font-size: 20px; letter-spacing: -.035em; margin: 0 0 4px; }
-      .department-test-section .test-card-copy p { color: #888; font-size: 12px; line-height: 1.7; }
-      .department-test-section .test-entry-button { flex: 0 0 auto; height: auto; min-height: 42px; padding: 0 2px 0 24px; background: transparent; color: var(--navy); border: 0; font-size: 13px; font-weight: 500; cursor: pointer; transition: .25s; white-space: nowrap; }
-      .department-test-section .test-entry-button:hover { color: var(--gold); transform: translateX(4px); background: transparent; }
-      .department-test-section .test-entry-button b { margin-left: 10px; font-size: 18px; font-weight: 300; }
+      .department-test-section .section-header { display: none; }
+      .department-test-section .test-card { margin: 28px 0 82px; }
+      .department-test-section .test-card-copy > span { display: none !important; }
+      .department-test-section .test-card-copy h3 { margin-bottom: 10px !important; }
+      .department-test-section .test-card-copy p { margin: 0 0 4px; }
+      .department-test-section .test-card-copy p:last-child { margin-bottom: 0; }
 
       .result-actions { flex-wrap: wrap; }
       .result-actions button { min-width: 150px; }
@@ -54,16 +48,10 @@
       .result-actions .share-result.copied { border-color: #7f8c72; color: #58634d; }
 
       @media(max-width: 850px) {
-        .department-test-section .section-header { padding: 45px 0 25px; }
-        .department-test-section .test-card { grid-template-columns: 60px 1fr; gap: 0; }
-        .department-test-section .test-entry-button { grid-column: 2; justify-self: start; margin-top: 18px; padding-left: 0; }
+        .department-test-section .test-card { margin: 22px 0 65px; }
       }
       @media(max-width: 600px) {
-        .department-test-section .section-header { padding: 38px 0 22px; }
-        .department-test-section .test-card { grid-template-columns: 1fr; padding: 28px 0; }
-        .department-test-section .test-card::before { margin-bottom: 14px; }
-        .department-test-section .test-entry-button { grid-column: auto; margin-top: 16px; }
-        .common-curriculum { margin-bottom: 50px; }
+        .department-test-section .test-card { margin: 18px 0 52px; }
       }
     `;
     document.head.appendChild(style);
@@ -101,7 +89,8 @@
           <div class="test-card-copy">
             <span>10 QUESTIONS · 5 DEPARTMENTS</span>
             <h3>나에게 맞는 학과 찾아보기</h3>
-            <p>10개의 질문에 답하면 당신의 성향과 가장 잘 어울리는 학과를 알아볼 수 있습니다.</p>
+            <p>어느 학과에 지원할지 고민이 드시나요?</p>
+            <p>당신에게 잘 어울리는 학과를 찾아보세요.<br>10개의 질문에 답하면 당신의 성향과 가장 잘 어울리는 학과를 알아볼 수 있습니다.</p>
           </div>
           <button type="button" class="test-entry-button" id="openDepartmentTestEntry">나에게 맞는 학과 찾아보기 <b>→</b></button>
         </div>
