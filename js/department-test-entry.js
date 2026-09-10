@@ -156,6 +156,22 @@
         button.classList.remove('copied');
       }, 1800);
     });
+
+    /* The result markup is created later by main.js, so insert Share after it appears. */
+    const resultObserverTarget = document.getElementById('testDialogInner');
+    if (resultObserverTarget && 'MutationObserver' in window) {
+      const resultObserver = new MutationObserver(() => {
+        const actions = resultObserverTarget.querySelector('.result-actions');
+        if (!actions || actions.querySelector('#shareDepartmentResult')) return;
+        const shareButton = document.createElement('button');
+        shareButton.type = 'button';
+        shareButton.id = 'shareDepartmentResult';
+        shareButton.className = 'share-result';
+        shareButton.textContent = '공유하기';
+        actions.appendChild(shareButton);
+      });
+      resultObserver.observe(resultObserverTarget, { childList: true, subtree: true });
+    }
   }
 
   if (document.readyState === 'loading') {
