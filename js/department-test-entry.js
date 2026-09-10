@@ -32,10 +32,10 @@
       .common-course-table tbody tr { transition: background .2s ease; }
       .common-course-table tbody tr:hover { background: rgba(255,255,255,.025); }
 
-      /* Department matching CTA: visually continues the department list */
+      /* Department matching CTA */
       .department-test-section { padding: 0; background: #fff; color: var(--black); }
       .department-test-section .container { width: min(1180px,calc(100% - 48px)); }
-      .department-test-section .section-header { margin: 0; padding: 90px 0 42px; }
+      .department-test-section .section-header { margin: 0; padding: 55px 0 30px; }
       .department-test-section .section-eyebrow { color: var(--gold); }
       .department-test-section .section-title { color: var(--black); }
       .department-test-section .section-subtitle { color: var(--gray-600); }
@@ -54,12 +54,12 @@
       .result-actions .share-result.copied { border-color: #7f8c72; color: #58634d; }
 
       @media(max-width: 850px) {
-        .department-test-section .section-header { padding: 75px 0 35px; }
+        .department-test-section .section-header { padding: 45px 0 25px; }
         .department-test-section .test-card { grid-template-columns: 60px 1fr; gap: 0; }
         .department-test-section .test-entry-button { grid-column: 2; justify-self: start; margin-top: 18px; padding-left: 0; }
       }
       @media(max-width: 600px) {
-        .department-test-section .section-header { padding: 60px 0 30px; }
+        .department-test-section .section-header { padding: 38px 0 22px; }
         .department-test-section .test-card { grid-template-columns: 1fr; padding: 28px 0; }
         .department-test-section .test-card::before { margin-bottom: 14px; }
         .department-test-section .test-entry-button { grid-column: auto; margin-top: 16px; }
